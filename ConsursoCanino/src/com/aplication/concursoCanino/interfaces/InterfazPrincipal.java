@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
+import java.awt.Insets;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,13 +29,21 @@ import javax.swing.JOptionPane;
  */
 public class InterfazPrincipal extends JFrame{
     
-    Perro[] lista;
+
     
     ArrayList<Perro> listaPerros=new ArrayList<Perro>(); 
     
-    PanelTablaPerros panel;
-    PerroImplements implPerro;
-    PanelDatosPerros panelDatos;
+    private PanelTablaPerros panel;
+    private PerroImplements implPerro;
+    private PanelDatosPerros panelDatos;
+    private PanelBotonesOrdenamientos panelOrdenamiento;
+    
+    private int cantidadPerros;
+    
+    
+    //cards de datos
+    private PanelCardsInformativas panelInformativo;
+    private Cards cardInformativas;
     
     public InterfazPrincipal() throws IOException {
         
@@ -43,28 +53,44 @@ public class InterfazPrincipal extends JFrame{
         
         implPerro.setPerros(listaPerros);
         //Configuracion inicial
-        setLayout( new GridBagLayout( ) );
+        setLayout( new GridBagLayout());
         GridBagConstraints gbc=new GridBagConstraints();
-        
+        gbc.insets = new Insets(3, 3, 3, 3);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(500, 500)); 
+        setPreferredSize(new Dimension(700, 500)); 
         //añadiendo paneles
-        
         gbc.gridx=0;
         gbc.gridy=0;
+        gbc.gridwidth= 2;
+        panelInformativo = new PanelCardsInformativas(this);
+        add(panelInformativo,gbc);
+        
+        
+        gbc.gridx=0;
+        gbc.gridy=1;
+        gbc.gridwidth= 1;
         gbc.weightx=1.0;
         gbc.weighty = 1.0;  
         gbc.fill = GridBagConstraints.BOTH;
         panel =new PanelTablaPerros(this);
         add(panel,gbc);
+        
         gbc.gridx=1;
-        gbc.gridy=0;
-        panelDatos = new PanelDatosPerros();
+        gbc.gridy=1;
+        gbc.gridwidth= 1;
+        panelDatos = new PanelDatosPerros(this);
         add(panelDatos,gbc);
+        
+        gbc.gridx=0;
+        gbc.gridy=2;
+        gbc.gridwidth= 2;
+        gbc.fill = GridBagConstraints.NONE;
+        panelOrdenamiento = new PanelBotonesOrdenamientos(this);
+        add(panelOrdenamiento,gbc);
         
         panelDatos.cargarDatos(implPerro.getPerros().get(0));
         
-        
+        ingresarCards();
         pack();
         
         
@@ -86,9 +112,8 @@ public class InterfazPrincipal extends JFrame{
             int puntos;
             int edad;
             int cantidad = Integer.valueOf(propiedad.getProperty( "total.perros"));
-            
-            
-            lista = new Perro[cantidad];
+            setCantidadPerros(Integer.valueOf(propiedad.getProperty( "total.perros")));
+            //lista = new Perro[cantidad];
             for (int i = 0; i < cantidad ; i++) {
 
                 String para = "perro" + (i + 1);
@@ -101,9 +126,6 @@ public class InterfazPrincipal extends JFrame{
 
                 Perro p = new Perro(nombre, raza, image ,puntos,edad);
                 listaPerros.add(p);
-                lista[i] = p;
-                System.out.println("" + lista[i].getName());
-
             }
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this,
@@ -119,6 +141,46 @@ public class InterfazPrincipal extends JFrame{
         //panel.m.addRow(lista);
          
     }
+    
+    public void ordenarPorRaza(){
+        
+        implPerro.ordenarPorRaza();
+        
+        panel.actualizarTabla();
+        
+    }
+    
+    public void ordenarPorNombre(){
+       
+        implPerro.ordenarPorNombre();
+        
+        panel.actualizarTabla();
+        
+    }
+    
+    public void ordenarPorPuntos(){
+       
+        implPerro.ordenarPorPuntos();
+        
+        panel.actualizarTabla();
+        
+    }
+    
+    public void ordenarPorEdad(){
+       
+        implPerro.ordenarPorEdad();
+        
+        panel.actualizarTabla();
+        
+    }
+
+    public InterfazPrincipal( PanelTablaPerros panel, PerroImplements implPerro, PanelDatosPerros panelDatos) throws HeadlessException {
+        
+        this.panel = panel;
+        this.implPerro = implPerro;
+        this.panelDatos = panelDatos;
+    }
+    
     
     public void buscarPerro(String nombre){
         Perro p = implPerro.BuscarPerroNombre(nombre);
@@ -142,6 +204,46 @@ public class InterfazPrincipal extends JFrame{
         
         
     }
+    
+    private void ingresarCards(){
+        Perro perro=new Perro();
+        perro = implPerro.mayorPuntaje();
+        
+        
+        
+        
+        cardInformativas =new Cards("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
+        
+        panelInformativo.AgregarCard(cardInformativas);
+        
+       
+        
+        perro = implPerro.menorPuntaje();
+        cardInformativas =new Cards("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
+        panelInformativo.AgregarCard(cardInformativas);
+        
+        perro = implPerro.perroViejo();
+        cardInformativas =new Cards("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
+        panelInformativo.AgregarCard(cardInformativas);
+        
+        
+        cardInformativas =new Cards("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
+        panelInformativo.AgregarCard(cardInformativas);
+        
+        System.out.println(""+perro.getName());
+        
+        
+    }
+
+    public int getCantidadPerros() {
+        return cantidadPerros;
+    }
+
+    public void setCantidadPerros(int cantidadPerros) {
+        this.cantidadPerros = cantidadPerros;
+    }
+    
+    
         
 
     

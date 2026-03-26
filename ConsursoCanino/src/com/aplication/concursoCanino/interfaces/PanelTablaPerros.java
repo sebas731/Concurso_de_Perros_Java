@@ -16,6 +16,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -117,17 +118,17 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         JPanel panelT=new JPanel();
         
         
-        String array[]= {"Nombre","Edad","Raza"};
+        String array[]= {"Nombre","Edad","Raza","Puntos"};
         m=new DefaultTableModel(array,0);
         
         //m.setValueAt(array, 2, 2);
         listaTabla = new JTable(m);
         JScrollPane scrollPane = new JScrollPane(listaTabla);
-        scrollPane.setPreferredSize(new Dimension(200, 250));
+        scrollPane.setPreferredSize(new Dimension(250, 250));
 
         panelT.add(scrollPane,BorderLayout.CENTER);
         add(panelT,gbs);
-        actualizarLista();
+        actualizarTabla();
         
         
         
@@ -138,21 +139,42 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         m.addRow(new Object[]{
             p.getName(),
             p.getEdad(),
-            p.getRaza()
+            p.getRaza(),
+            p.getPuntos()
         });
     }
+     
+    public void actualizarTabla(ArrayList<Perro> listaPerros){
+        m.setRowCount(0);
 
-    
-    public void actualizarLista(){
-         m.setRowCount(0);
-
-        if (interfazP.lista != null) {
-            for (Perro perro : interfazP.lista) {
+        if (listaPerros != null) {
+            for (Perro perro : listaPerros) {
                 if (perro != null) { // protección contra posiciones nulas
                     Object[] fila = {
                         perro.getName(),
                         perro.getEdad(),  // o getPuntos() según tu clase Perro
-                        perro.getRaza()
+                        perro.getRaza(),
+                        perro.getPuntos()
+                    };
+                    m.addRow(fila);
+                }
+            }
+        }
+     
+    }
+
+    
+    public void actualizarTabla(){
+        m.setRowCount(0);
+
+        if (interfazP.listaPerros != null) {
+            for (Perro perro : interfazP.listaPerros) {
+                if (perro != null) { // protección contra posiciones nulas
+                    Object[] fila = {
+                        perro.getName(),
+                        perro.getEdad(),  // o getPuntos() según tu clase Perro
+                        perro.getRaza(),
+                        perro.getPuntos()
                     };
                     m.addRow(fila);
                 }
