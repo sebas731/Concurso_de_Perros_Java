@@ -41,7 +41,6 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
     DefaultTableModel m;
     InterfazPrincipal interfazP;
     
-    
     //Botones valor
     
    
@@ -115,7 +114,7 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         gbs.weightx=1.0;
         gbs.weighty = 1.0;  
         gbs.fill = GridBagConstraints.BOTH;
-        JPanel panelT=new JPanel();
+        JPanel panelT=new JPanel(new BorderLayout());
         
         
         String array[]= {"Nombre","Edad","Raza","Puntos"};
@@ -123,11 +122,16 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         
         //m.setValueAt(array, 2, 2);
         listaTabla = new JTable(m);
+        
         JScrollPane scrollPane = new JScrollPane(listaTabla);
-        scrollPane.setPreferredSize(new Dimension(250, 250));
-
+        //scrollPane.setBounds(20,40,250,250);
+        //scrollPane.setPreferredSize(new Dimension(this.getPreferredSize().width -30,this.getPreferredSize().height -40 ));
+        //scrollPane.setPreferredSize(new Dimension(250, 250));
+        
         panelT.add(scrollPane,BorderLayout.CENTER);
         add(panelT,gbs);
+        
+        System.out.println(""+this.getPreferredSize().width);
         actualizarTabla();
         
         

@@ -2,7 +2,7 @@
 # Perros de la exposición
 #---------------------------------------------------------
 
-total.perros = 11
+total.perros = 14
 
 perro1.nombre = Puppy
 perro1.raza = Gran Danés
@@ -69,3 +69,21 @@ perro11.raza = Mastin Napolitano
 perro11.imagen = .//data//mastin.jpg
 perro11.puntos = 83
 perro11.edad = 16
+
+perro12.nombre = Firulais
+perro12.raza = Mastin Napolitano
+perro12.imagen = .//data//mastin.jpg
+perro12.puntos = 84
+perro12.edad = 16
+
+perro13.nombre = Ginola
+perro13.raza = Mastin Napolitano
+perro13.imagen = .//data//mastin.jpg
+perro13.puntos = 45
+perro13.edad = 16
+
+perro14.nombre = Kira
+perro14.raza = Mastin Napolitano
+perro14.imagen = .//data//mastin.jpg
+perro14.puntos = 45
+perro14.edad = 16

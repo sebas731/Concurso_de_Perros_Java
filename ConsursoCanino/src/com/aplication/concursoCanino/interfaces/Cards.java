@@ -7,6 +7,7 @@ package com.aplication.concursoCanino.interfaces;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -43,7 +44,8 @@ public class Cards extends JPanel{
         setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
         
         lblTitulo = new JLabel(titulo);
-        lblTitulo.setForeground(new Color(130, 130, 130));
+        lblTitulo.setForeground(Color.BLACK);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 15));
         
         lblSubtitulo = new JLabel(subTitulo);
         lblSubtitulo.setForeground(new Color(130, 130, 130));

@@ -37,7 +37,7 @@ public class InterfazPrincipal extends JFrame{
     private PerroImplements implPerro;
     private PanelDatosPerros panelDatos;
     private PanelBotonesOrdenamientos panelOrdenamiento;
-    
+    private PanelFormulario panelForm;
     private int cantidadPerros;
     
     
@@ -57,7 +57,7 @@ public class InterfazPrincipal extends JFrame{
         GridBagConstraints gbc=new GridBagConstraints();
         gbc.insets = new Insets(3, 3, 3, 3);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(700, 500)); 
+        setPreferredSize(new Dimension(700, 600)); 
         //añadiendo paneles
         gbc.gridx=0;
         gbc.gridy=0;
@@ -69,6 +69,7 @@ public class InterfazPrincipal extends JFrame{
         gbc.gridx=0;
         gbc.gridy=1;
         gbc.gridwidth= 1;
+        gbc.gridheight=2;
         gbc.weightx=1.0;
         gbc.weighty = 1.0;  
         gbc.fill = GridBagConstraints.BOTH;
@@ -78,16 +79,25 @@ public class InterfazPrincipal extends JFrame{
         gbc.gridx=1;
         gbc.gridy=1;
         gbc.gridwidth= 1;
+        gbc.gridheight=1;
         panelDatos = new PanelDatosPerros(this);
         add(panelDatos,gbc);
         
-        gbc.gridx=0;
+        gbc.gridx=1;
         gbc.gridy=2;
+        gbc.gridwidth= 2;
+        panelForm = new PanelFormulario();
+        add(panelForm,gbc);
+        
+        gbc.gridx=0;
+        gbc.gridy=3;
         gbc.gridwidth= 2;
         gbc.fill = GridBagConstraints.NONE;
         panelOrdenamiento = new PanelBotonesOrdenamientos(this);
         add(panelOrdenamiento,gbc);
         
+        
+        //
         panelDatos.cargarDatos(implPerro.getPerros().get(0));
         
         ingresarCards();
