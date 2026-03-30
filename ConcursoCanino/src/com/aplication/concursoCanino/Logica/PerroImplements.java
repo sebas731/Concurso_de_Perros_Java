@@ -4,10 +4,17 @@
  */
 package com.aplication.concursoCanino.Logica;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,9 +23,18 @@ import java.util.List;
 public class PerroImplements {
     
     private ArrayList<Perro> perros;
+    
+    private int cantidadPerros;
+    
+    private FileInputStream fis ;
+    
+    private static Properties propiedad;
+    
+    
 
     public PerroImplements() {
         this.perros = new ArrayList<Perro>();
+        cargar();
     }
 
     public ArrayList<Perro> getPerros() {
@@ -123,7 +139,7 @@ public class PerroImplements {
             
         }
         
-        perros.forEach(e-> System.out.println(""+e.getPuntos()));
+        
         
         
     }
@@ -187,6 +203,95 @@ public class PerroImplements {
         
         return pMayor;
     }
+    
+    //cargar datos
+    
+    private void cargar() {
+        
+        try {
+
+            fis = new FileInputStream(new File("./data/perros.txt"));
+            
+            
+            propiedad = new Properties();
+
+            propiedad.load(fis);
+            
+            String nombre;
+            String raza;
+            String image;
+            int puntos;
+            int edad;
+            int cantidad = Integer.valueOf(propiedad.getProperty( "total.perros"));
+            setCantidadPerros(cantidad);
+            //lista = new Perro[cantidad];
+            for (int i = 0; i < cantidad ; i++) {
+
+                String para = "perro" + (i + 1);
+
+                nombre = propiedad.getProperty(para + ".nombre");
+                raza = propiedad.getProperty(para + ".raza");
+                image = propiedad.getProperty(para+".imagen");
+                puntos = Integer.valueOf(propiedad.getProperty(para + ".puntos"));
+                edad = Integer.valueOf(propiedad.getProperty(para + ".edad"));
+
+                Perro p = new Perro(nombre, raza, image ,puntos,edad);
+                perros.add(p);
+            }
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("" + e.getLocalizedMessage());
+        } catch (IOException e) {
+            System.out.println(""+e.getMessage());
+        }finally{
+            try {
+                if (fis !=null) fis.close();
+                
+            } catch (IOException e) {
+                System.out.println(""+e.getMessage());
+            }
+            
+        }
+        
+        
+        //panel.m.addRow(lista);
+         
+    }
+
+    public int getCantidadPerros() {
+        return cantidadPerros;
+    }
+
+    public void setCantidadPerros(int cantidadPerros) {
+        this.cantidadPerros = cantidadPerros;
+    }
+
+    public void insertarPerro(Perro p) {
+        
+        try {
+        perros.add(p);
+        fis = new FileInputStream(new File("./data/perros.txt"));
+        propiedad.load(new FileInputStream("./data/perros.txt"));
+        setCantidadPerros(cantidadPerros+1);
+        int nuevoTotal = getCantidadPerros();
+        propiedad.setProperty("total.perros", String.valueOf(nuevoTotal));
+        propiedad.setProperty("perro"+nuevoTotal+".nombre", p.getName());
+        propiedad.setProperty("perro"+nuevoTotal+".raza", p.getRaza());
+        propiedad.setProperty("perro"+nuevoTotal+".imagen", p.getImagen());
+        propiedad.setProperty("perro"+nuevoTotal+".puntos", String.valueOf(p.getPuntos()));
+        propiedad.setProperty("perro"+nuevoTotal+".edad", String.valueOf(p.getEdad()));
+        
+        propiedad.store(new FileOutputStream(new File("./data/perros.txt")), "perros");
+        } catch (IOException e) {
+            
+            System.out.println(""+e.getMessage());
+        }
+        
+        
+        
+        
+    }
+    
     
     
     

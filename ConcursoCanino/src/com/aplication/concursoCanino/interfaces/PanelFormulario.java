@@ -4,6 +4,7 @@
  */
 package com.aplication.concursoCanino.interfaces;
 
+import com.aplication.concursoCanino.Logica.Perro;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -18,6 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -27,6 +29,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -55,6 +59,8 @@ public class PanelFormulario extends JPanel implements ActionListener{
     
     private JButton btnLimpiar;
     
+    private InterfazPrincipal interfazMain;
+    
 
     /*
     txtPuntos = new JSpinner(new SpinnerNumberModel(
@@ -76,8 +82,12 @@ public class PanelFormulario extends JPanel implements ActionListener{
     //CLASE ANONIMA FOCUSLISTENER
     private FocusListener oyenteFocus;
 
-    public PanelFormulario() {
+    public PanelFormulario(InterfazPrincipal interfaz) {
+        
+        interfazMain=interfaz;
+        
         crearFocusListener();
+        
         GridBagConstraints gbs = new GridBagConstraints();
         gbs.insets = new Insets(5, 5, 0, 5);
 
@@ -102,15 +112,17 @@ public class PanelFormulario extends JPanel implements ActionListener{
         gbs.gridwidth = 1;
         gbs.weightx = 1.0;
         txtNombre = new JTextField("Nombre");
+        txtNombre.setBorder(BorderFactory.createTitledBorder("Nombre"));
         txtNombre.setForeground(Color.GRAY);
         txtNombre.addFocusListener(oyenteFocus);
         add(txtNombre, gbs);
-
+        
         //TXTRAZA
         gbs.gridx = 1;
         gbs.gridy = 1;
         gbs.gridwidth = 1;
-        txtRaza = new JTextField("Raza ");
+        txtRaza = new JTextField("Raza");
+        txtRaza.setBorder(BorderFactory.createTitledBorder("Raza"));
         txtRaza.addFocusListener(oyenteFocus);
         add(txtRaza, gbs);
 
@@ -120,6 +132,7 @@ public class PanelFormulario extends JPanel implements ActionListener{
         gbs.gridwidth = 1;
         txtEdad = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
         txtEdad.addFocusListener(oyenteFocus);
+        txtEdad.setBorder(BorderFactory.createTitledBorder("Edad"));
         add(txtEdad, gbs);
 
         //TXTPuntos
@@ -127,6 +140,7 @@ public class PanelFormulario extends JPanel implements ActionListener{
         gbs.gridy = 2;
         gbs.gridwidth = 1;
         txtPuntos = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+        txtPuntos.setBorder(BorderFactory.createTitledBorder("Puntos"));
         txtPuntos.addFocusListener(oyenteFocus);
         add(txtPuntos, gbs);
 
@@ -137,6 +151,8 @@ public class PanelFormulario extends JPanel implements ActionListener{
         gbs.gridy = 3;
         gbs.gridwidth = 1;
         txtFile = new JTextField("./data");
+        txtFile.setForeground(Color.GRAY);
+        txtFile.setBorder(BorderFactory.createTitledBorder("Imagen"));
 
         add(txtFile, gbs);
 
@@ -167,6 +183,21 @@ public class PanelFormulario extends JPanel implements ActionListener{
         add(btnLimpiar, gbs);
 
     }
+    
+    public void limpiar(){
+        txtNombre.setForeground(Color.GRAY);
+        txtNombre.setText("Nombre");
+        
+        txtFile.setForeground(Color.GRAY);
+        txtFile.setText("./data");
+        
+        txtRaza.setForeground(Color.GRAY);
+        txtRaza.setText("Raza");
+        
+        txtEdad.setValue(1);
+        
+        txtPuntos.setValue(1);
+    }
 
     public void crearFocusListener() {
 
@@ -174,11 +205,14 @@ public class PanelFormulario extends JPanel implements ActionListener{
             @Override
             public void focusGained(FocusEvent e) {
 
-                if (e.getSource() instanceof JTextField) {
-
+                if (e.getSource()instanceof JTextField) {
                     JTextField campo = (JTextField) e.getSource();
+                    if (campo.getText().isBlank()||campo.getText().equalsIgnoreCase("Nombre") || campo.getText().equalsIgnoreCase("Raza")) {
                     campo.setForeground(Color.black);
                     campo.setText("");
+                    }
+                    
+                    
 
                 } else if (e.getSource() instanceof JSpinner) {
                     JSpinner campo = (JSpinner) e.getSource();
@@ -191,6 +225,7 @@ public class PanelFormulario extends JPanel implements ActionListener{
         };
 
     }
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -206,15 +241,36 @@ public class PanelFormulario extends JPanel implements ActionListener{
 
                 txtFile.setText(f.getAbsolutePath());
             } else if (n == JFileChooser.CANCEL_OPTION) {
-                JOptionPane.showMessageDialog(this, "Ningun archivo seleccionado");
-                txtFile.setText("./data");
+                
+                if (!(txtFile.getText().equals("./data"))) {
+                    JOptionPane.showMessageDialog(this, "No se pudo editar el archivo");
+                    
+                }else{
+                    txtFile.setText("./data");
+                    JOptionPane.showMessageDialog(this, "Ningun archivo seleccionado");
+                }
+
             }
 
         }else if (e.getActionCommand().equals(AGREGAR_FORMULARIO)) {
             
+            String nombre=txtNombre.getText();
+            String raza=txtRaza.getText();
+            int edad= (int) txtEdad.getValue();
+            int puntos= (int) txtPuntos.getValue();
+            String img=txtFile.getText();
+            
+            
+            
+            Perro p=new Perro(nombre,raza,img,puntos , edad);
+            interfazMain.agregarPerro(p);
+            limpiar();
             
             
         }else if (e.getActionCommand().equals(LIMPIAR_FORMULARIO)) {
+           //volviendo a la normalidad los campor
+            limpiar();
+            
             
             
             

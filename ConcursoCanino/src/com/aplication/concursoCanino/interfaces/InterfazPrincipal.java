@@ -15,6 +15,7 @@ import java.awt.Insets;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,12 @@ public class InterfazPrincipal extends JFrame{
     
     public InterfazPrincipal() throws IOException {
         
-        cargar();
+       // cargar();
         
         implPerro=new PerroImplements();
         
-        implPerro.setPerros(listaPerros);
+        listaPerros = implPerro.getPerros();
+        setCantidadPerros(listaPerros.size());
         //Configuracion inicial
         setLayout( new GridBagLayout());
         GridBagConstraints gbc=new GridBagConstraints();
@@ -86,7 +88,7 @@ public class InterfazPrincipal extends JFrame{
         gbc.gridx=1;
         gbc.gridy=2;
         gbc.gridwidth= 2;
-        panelForm = new PanelFormulario();
+        panelForm = new PanelFormulario(this);
         add(panelForm,gbc);
         
         gbc.gridx=0;
@@ -106,51 +108,6 @@ public class InterfazPrincipal extends JFrame{
         
     }
     
-    private void cargar() throws FileNotFoundException, IOException{
-        
-        try {
-
-            FileInputStream fis = new FileInputStream(new File("./data/perros.txt"));
-
-            Properties propiedad = new Properties();
-
-            propiedad.load(fis);
-
-            String nombre;
-            String raza;
-            String image;
-            int puntos;
-            int edad;
-            int cantidad = Integer.valueOf(propiedad.getProperty( "total.perros"));
-            setCantidadPerros(Integer.valueOf(propiedad.getProperty( "total.perros")));
-            //lista = new Perro[cantidad];
-            for (int i = 0; i < cantidad ; i++) {
-
-                String para = "perro" + (i + 1);
-
-                nombre = propiedad.getProperty(para + ".nombre");
-                raza = propiedad.getProperty(para + ".raza");
-                image = propiedad.getProperty(para+".imagen");
-                puntos = Integer.valueOf(propiedad.getProperty(para + ".puntos"));
-                edad = Integer.valueOf(propiedad.getProperty(para + ".edad"));
-
-                Perro p = new Perro(nombre, raza, image ,puntos,edad);
-                listaPerros.add(p);
-            }
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this,
-                    "No se encontró el archivo de datos.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al leer el archivo de datos.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        
-        //panel.m.addRow(lista);
-         
-    }
     
     public void ordenarPorRaza(){
         
@@ -183,13 +140,6 @@ public class InterfazPrincipal extends JFrame{
         panel.actualizarTabla();
         
     }
-
-    public InterfazPrincipal( PanelTablaPerros panel, PerroImplements implPerro, PanelDatosPerros panelDatos) throws HeadlessException {
-        
-        this.panel = panel;
-        this.implPerro = implPerro;
-        this.panelDatos = panelDatos;
-    }
     
     
     public void buscarPerro(String nombre){
@@ -198,7 +148,7 @@ public class InterfazPrincipal extends JFrame{
         if (p!=null) {
             Object[] fila = {
                 p.getName(),
-                p.getEdad(), // o getPuntos() según tu clase Perro
+                p.getEdad(),
                 p.getRaza()
             };
             
@@ -219,9 +169,6 @@ public class InterfazPrincipal extends JFrame{
         Perro perro=new Perro();
         perro = implPerro.mayorPuntaje();
         
-        
-        
-        
         cardInformativas =new Cards("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
         
         panelInformativo.AgregarCard(cardInformativas);
@@ -240,7 +187,7 @@ public class InterfazPrincipal extends JFrame{
         cardInformativas =new Cards("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
         panelInformativo.AgregarCard(cardInformativas);
         
-        System.out.println(""+perro.getName());
+        
         
         
     }
@@ -262,6 +209,13 @@ public class InterfazPrincipal extends JFrame{
         
         InterfazPrincipal i=new InterfazPrincipal();
         i.setVisible(true);
+    }
+
+    void agregarPerro(Perro p) {
+        
+        implPerro.insertarPerro(p);
+        panel.actualizarTabla();
+        
     }
     
 }
