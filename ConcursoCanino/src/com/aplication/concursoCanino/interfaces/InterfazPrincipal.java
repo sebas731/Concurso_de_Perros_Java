@@ -47,8 +47,11 @@ public class InterfazPrincipal extends JFrame{
     //cards de datos
     private PanelCardsInformativas panelInformativo;
     private Cards cardInformativas;
+    private Cards cardGanador;
+    private Cards cardPerroViejo;
+    private Cards cardMenorPuntaje;
     
-    public InterfazPrincipal() throws IOException {
+    public InterfazPrincipal(){
         
        // cargar();
         
@@ -109,6 +112,25 @@ public class InterfazPrincipal extends JFrame{
         pack();
         
         
+    }
+    
+    public void ActualizarCards(){
+        Perro perro=new Perro();
+        perro = implPerro.mayorPuntaje();
+        
+        cardGanador.Actualizar("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
+        
+        perro = implPerro.menorPuntaje();
+        cardMenorPuntaje.Actualizar("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
+        
+        
+        perro = implPerro.perroViejo();
+        cardPerroViejo.Actualizar("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
+       
+        
+        
+        cardInformativas.Actualizar("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
+
     }
     
     
@@ -172,26 +194,25 @@ public class InterfazPrincipal extends JFrame{
         Perro perro=new Perro();
         perro = implPerro.mayorPuntaje();
         
-        cardInformativas =new Cards("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
         
-        panelInformativo.AgregarCard(cardInformativas);
+        cardGanador =new Cards("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
+        
+        panelInformativo.AgregarCard(cardGanador);
         
        
         
         perro = implPerro.menorPuntaje();
-        cardInformativas =new Cards("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
-        panelInformativo.AgregarCard(cardInformativas);
+        cardMenorPuntaje =new Cards("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
+        panelInformativo.AgregarCard(cardMenorPuntaje);
         
         perro = implPerro.perroViejo();
-        cardInformativas =new Cards("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
-        panelInformativo.AgregarCard(cardInformativas);
+        cardPerroViejo =new Cards("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
+        panelInformativo.AgregarCard(cardPerroViejo);
         
         
         cardInformativas =new Cards("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
         panelInformativo.AgregarCard(cardInformativas);
-        
-        
-        
+         
         
     }
 
@@ -217,6 +238,7 @@ public class InterfazPrincipal extends JFrame{
     void agregarPerro(Perro p) {
         
         implPerro.insertarPerro(p);
+        setCantidadPerros(implPerro.getPerros().size());
         panel.actualizarTabla();
         
     }

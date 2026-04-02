@@ -1,5 +1,5 @@
 #perros
-#Wed Apr 01 23:06:31 GMT-05:00 2026
+#Wed Apr 01 23:32:33 GMT-05:00 2026
 perro1.edad=10
 perro1.imagen=.//data//gran_danes.jpg
 perro1.nombre=Puppy
@@ -45,6 +45,16 @@ perro17.imagen=./data\\akita.jpg
 perro17.nombre=Boungiorno
 perro17.puntos=91
 perro17.raza=Akita
+perro18.edad=40
+perro18.imagen=./data\\mastin.jpg
+perro18.nombre=Geman
+perro18.puntos=2
+perro18.raza=Matin Napolitano
+perro19.edad=1
+perro19.imagen=./data\\pug.jpg
+perro19.nombre=Dardos
+perro19.puntos=1
+perro19.raza=Pug
 perro2.edad=11
 perro2.imagen=.//data//beagle.jpg
 perro2.nombre=Taylor
@@ -85,4 +95,4 @@ perro9.imagen=.//data//chih.jpg
 perro9.nombre=Leviat\u00E1n
 perro9.puntos=40
 perro9.raza=Chiuahua
-total.perros=17
+total.perros=19

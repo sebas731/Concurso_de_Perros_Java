@@ -269,6 +269,7 @@ public class PanelFormulario extends JPanel implements ActionListener{
             Perro p=new Perro(nombre,raza,img,puntos , edad);
             interfazMain.agregarPerro(p);
             limpiar();
+            interfazMain.ActualizarCards();
             
             
         }else if (e.getActionCommand().equals(LIMPIAR_FORMULARIO)) {

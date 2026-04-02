@@ -66,6 +66,13 @@ public class Cards extends JPanel{
         
         
     }
+    
+    public void Actualizar(String titulo, String subTitulo, String valor){
+        this.lblSubtitulo.setText(subTitulo);
+        this.lblTitulo.setText(titulo);
+        this.lblValor.setText(valor);
+        
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
