@@ -6,6 +6,7 @@ package com.aplication.concursoCanino.interfaces;
 
 import com.aplication.concursoCanino.Logica.Perro;
 import com.aplication.concursoCanino.Logica.PerroImplements;
+import com.sun.jdi.connect.ListeningConnector;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,6 +29,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -35,7 +38,7 @@ import javax.swing.table.TableModel;
  *
  * @author Familia Mamani
  */
-public class PanelTablaPerros extends JPanel implements ActionListener{
+public class PanelTablaPerros extends JPanel implements ActionListener {
     
     JTable listaTabla;
     DefaultTableModel m;
@@ -50,6 +53,11 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
     //JTextField
     
     JTextField txtBuscar;
+    
+    //private Jbutton Eliminar
+    private JButton btnEliminar;
+    
+    private JButton btnEditar;
     
     public PanelTablaPerros(InterfazPrincipal interfaz) {
         
@@ -111,8 +119,9 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         gbs.gridx=0;
         gbs.gridy=1;
         gbs.gridwidth=3;
+        
         gbs.weightx=1.0;
-        gbs.weighty = 1.0;  
+        gbs.weighty = 6.0;  
         gbs.fill = GridBagConstraints.BOTH;
         JPanel panelT=new JPanel(new BorderLayout());
         
@@ -122,6 +131,20 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         
         //m.setValueAt(array, 2, 2);
         listaTabla = new JTable(m);
+        listaTabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) { // evita que se dispare dos veces
+                    int fila = listaTabla.getSelectedRow();
+                    if (fila != -1) {
+                        String name;
+                        name = String.valueOf(listaTabla.getValueAt(fila, 0));
+                        interfazP.mostrarDatosPerro(name);
+        }
+    }
+            
+            }
+        });
         
         JScrollPane scrollPane = new JScrollPane(listaTabla);
         //scrollPane.setBounds(20,40,250,250);
@@ -130,12 +153,38 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         
         panelT.add(scrollPane,BorderLayout.CENTER);
         add(panelT,gbs);
+        System.out.println(""+panelT.getPreferredSize());
+        
+        gbs.gridx=0;
+        gbs.gridy=2;
+        gbs.gridwidth=1;
+        gbs.weightx=1.0;
+        gbs.weighty = 0.05;  
+        gbs.fill = GridBagConstraints.NONE;
+        btnEditar = new JButton("Editar");
+        add(btnEditar,gbs);
+        
+        
+        gbs.gridx=1;
+        gbs.gridy=2;
+        gbs.gridwidth=1;
+        gbs.weightx=1.0;
+          
+        gbs.fill = GridBagConstraints.CENTER;
+        btnEliminar = new JButton("Eliminar");
+       add(btnEliminar,gbs);
+        
         
         System.out.println(""+this.getPreferredSize().width);
         actualizarTabla();
         
         
         
+    }
+    
+    public int getIndexTable(){
+        
+        return listaTabla.getSelectedRow();
     }
     
      public void mostrarPerro(Perro p) {
@@ -188,6 +237,8 @@ public class PanelTablaPerros extends JPanel implements ActionListener{
         
         
     }
+    
+    
     
     
 

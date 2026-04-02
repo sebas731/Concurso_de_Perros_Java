@@ -23,6 +23,8 @@ import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -101,6 +103,7 @@ public class InterfazPrincipal extends JFrame{
         
         //
         panelDatos.cargarDatos(implPerro.getPerros().get(0));
+        
         
         ingresarCards();
         pack();
@@ -216,6 +219,13 @@ public class InterfazPrincipal extends JFrame{
         implPerro.insertarPerro(p);
         panel.actualizarTabla();
         
+    }
+
+    void mostrarDatosPerro(String name) {
+        Perro p;
+        p = implPerro.BuscarPerroNombre(name);
+        panelDatos.cargarDatos(p);
+    
     }
     
 }
