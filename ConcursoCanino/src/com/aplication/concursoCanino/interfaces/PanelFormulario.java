@@ -238,11 +238,15 @@ public class PanelFormulario extends JPanel implements ActionListener{
 
             if (n == JFileChooser.APPROVE_OPTION) {
                 f = fileChooser.getSelectedFile();
-
-                txtFile.setText(f.getAbsolutePath());
+                
+                String ruta=f.getAbsolutePath();
+                int index= ruta.indexOf("data");
+                
+                txtFile.setText("./"+ruta.substring(index));
             } else if (n == JFileChooser.CANCEL_OPTION) {
                 
                 if (!(txtFile.getText().equals("./data"))) {
+                    
                     JOptionPane.showMessageDialog(this, "No se pudo editar el archivo");
                     
                 }else{
