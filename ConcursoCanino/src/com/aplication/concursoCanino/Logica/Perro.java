@@ -11,15 +11,6 @@ package com.aplication.concursoCanino.Logica;
  * @author Familia Mamani
  */
 
-
-
-
-
-
-
-
-
-
 public class Perro  {
     
     private String name;
@@ -47,8 +38,6 @@ public class Perro  {
 
     public Perro() {
     }
-    
-    
     
 
     public String getName() {

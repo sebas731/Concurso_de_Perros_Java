@@ -24,9 +24,9 @@ import javax.swing.JPanel;
 public class Cards extends JPanel{
     
     
-    private static final Color colorFondo= Color.WHITE;
+    private static final Color COLOR_FONDO= Color.WHITE;
     
-    private static final Color colorBarra=new Color(55, 138, 221);
+    private static final Color COLOR_BARRA=new Color(55, 138, 221);
     
     private JLabel lblTitulo;
     
@@ -71,6 +71,7 @@ public class Cards extends JPanel{
         this.lblSubtitulo.setText(subTitulo);
         this.lblTitulo.setText(titulo);
         this.lblValor.setText(valor);
+        repaint();
         
     }
 
@@ -83,17 +84,18 @@ public class Cards extends JPanel{
         // sin esto los bordes redondeados se ven pixelados
         // con esto se ven suaves
         
-        //g2.setBackground(Color.WHITE);
+       
         g2.setColor(Color.WHITE);
-        g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 12, 12);
+        g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 30, 30);
         
         g2.setColor(Color.GRAY);
         g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 12, 12);
         
-        g2.setColor(colorBarra);
+        g2.setColor(COLOR_BARRA);
         g2.setStroke(new BasicStroke(3));
         g2.drawLine(3, 12, 3, getHeight()-12); // línea vertical izquierda
         g2.dispose();
+        
        
         
 

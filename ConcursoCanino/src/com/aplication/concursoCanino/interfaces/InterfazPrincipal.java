@@ -6,23 +6,16 @@ package com.aplication.concursoCanino.interfaces;
 
 import com.aplication.concursoCanino.Logica.Perro;
 import com.aplication.concursoCanino.Logica.PerroImplements;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -32,8 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -43,7 +34,7 @@ public class InterfazPrincipal extends JFrame{
     
 
     
-    ArrayList<Perro> listaPerros=new ArrayList<Perro>(); 
+    private ArrayList<Perro> listaPerros=new ArrayList<Perro>(); 
     
     private PanelTablaPerros panel;
     private PerroImplements implPerro;
@@ -122,19 +113,9 @@ public class InterfazPrincipal extends JFrame{
         
         
     }
-    public void eliminarPerro(String name){
-        Perro p = implPerro.BuscarPerroNombre(name);
-        if (p != null) {
-            implPerro.eliminarPerro(p);
-            actualizarCards();
-        }else{
-            JOptionPane.showMessageDialog(this, "PERRO NO ENCONTRADO");
-        }
-        
-    }
-    
+   
     public void editarPerro(String name){
-        System.out.println("hola");
+        
         Perro p = implPerro.BuscarPerroNombre(name);
         
         JSpinner txtEdad, txtPuntos;
@@ -210,7 +191,7 @@ public class InterfazPrincipal extends JFrame{
     }
     
     public void actualizarCards(){
-        Perro perro=new Perro();
+        Perro perro;
         perro = implPerro.mayorPuntaje();
         
         cardGanador.actualizar("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
@@ -318,12 +299,8 @@ public class InterfazPrincipal extends JFrame{
     public void setCantidadPerros(int cantidadPerros) {
         this.cantidadPerros = cantidadPerros;
     }
-    
-    
-        
 
-    
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         
         
         InterfazPrincipal i=new InterfazPrincipal();
@@ -344,5 +321,27 @@ public class InterfazPrincipal extends JFrame{
         panelDatos.cargarDatos(p);
     
     }
+     public void eliminarPerro(String name){
+        Perro p = implPerro.BuscarPerroNombre(name);
+        if (p != null) {
+            implPerro.eliminarPerro(p);
+            setCantidadPerros(implPerro.getPerros().size());
+            actualizarCards();
+        }else{
+            JOptionPane.showMessageDialog(this, "PERRO NO ENCONTRADO");
+        }
+        
+    }
+
+    public ArrayList<Perro> getListaPerros() {
+        return listaPerros;
+    }
+
+    public void setListaPerros(ArrayList<Perro> listaPerros) {
+        this.listaPerros = listaPerros;
+    }
+     
+    
+    
     
 }

@@ -5,8 +5,7 @@
 package com.aplication.concursoCanino.interfaces;
 
 import com.aplication.concursoCanino.Logica.Perro;
-import com.aplication.concursoCanino.Logica.PerroImplements;
-import com.sun.jdi.connect.ListeningConnector;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,23 +15,17 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 
 /**
  *
@@ -40,22 +33,18 @@ import javax.swing.table.TableModel;
  */
 public class PanelTablaPerros extends JPanel implements ActionListener {
     
-    JTable listaTabla;
-    DefaultTableModel m;
-    InterfazPrincipal interfazP;
+    private JTable listaTabla;
+    private DefaultTableModel m;
+    private InterfazPrincipal interfazP;
     //CONSTANTES
     private static final String EDITAR_PERRO = "Editar"; 
     private static final String ELIMINAR_PERRO = "Eliminar";
     private static final String BUSCAR_PERRO = "Buscar";
-//Botones valor
-    
-   
-    
-    private JRadioButton radioButtonOpcion1,radioButtonOpcion2,radioButtonOpcion3;
+    //Botones valor
     
     //JTextField
     
-    JTextField txtBuscar;
+    private JTextField txtBuscar;
     
     //private Jbutton Eliminar
     private JButton btnEliminar;
@@ -99,10 +88,7 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
         txtBuscar = new JTextField("");
         add(txtBuscar, gbs);
 
-        //PANEL CABECERA
-        JPanel panelCabecera = new JPanel();
-        panelCabecera.setLayout(new GridLayout(1, 3));
-
+        
         //BUSCAR PERRO
         JButton btnBuscar = new JButton("Buscar");
         btnBuscar.setPreferredSize(new Dimension(80, 30));
@@ -114,8 +100,7 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
         gbs.weightx = 0;
         gbs.fill = GridBagConstraints.NONE;
         add(btnBuscar, gbs);
-        //gbs.gridwidth=2;
-        //gbs.gridheight=4;
+        
         
         gbs.gridx = 0;
         gbs.gridy = 1;
@@ -207,32 +192,13 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
             p.getPuntos()
         });
     }
-     
-    public void actualizarTabla(ArrayList<Perro> listaPerros){
-        m.setRowCount(0);
-
-        if (listaPerros != null) {
-            for (Perro perro : listaPerros) {
-                if (perro != null) { // protección contra posiciones nulas
-                    Object[] fila = {
-                        perro.getName(),
-                        perro.getEdad(),  // o getPuntos() según tu clase Perro
-                        perro.getRaza(),
-                        perro.getPuntos()
-                    };
-                    m.addRow(fila);
-                }
-            }
-        }
-     
-    }
 
     
     public void actualizarTabla(){
         m.setRowCount(0);
 
-        if (interfazP.listaPerros != null) {
-            for (Perro perro : interfazP.listaPerros) {
+        if (interfazP.getListaPerros()!= null) {
+            for (Perro perro : interfazP.getListaPerros()) {
                 if (perro != null) { // protección contra posiciones nulas
                     Object[] fila = {
                         perro.getName(),
@@ -256,16 +222,16 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        if (e.getActionCommand().equals("Editar")) {
+        if (e.getActionCommand().equals(EDITAR_PERRO)) {
             
             String nombre=getNombreTablaPerro(getIndexTable(), 0);
             interfazP.editarPerro(nombre);
             actualizarTabla();
-        }else if (e.getActionCommand().equals("Eliminar")) {
+        }else if (e.getActionCommand().equals(ELIMINAR_PERRO)) {
             String nombre=getNombreTablaPerro(getIndexTable(), 0);
             interfazP.eliminarPerro(nombre);
             actualizarTabla();
-        }else if (e.getActionCommand().equals("Buscar")) {
+        }else if (e.getActionCommand().equals(BUSCAR_PERRO)) {
             interfazP.buscarPerro(txtBuscar.getText());
         }
        
