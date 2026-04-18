@@ -10,8 +10,11 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,8 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -113,23 +122,109 @@ public class InterfazPrincipal extends JFrame{
         
         
     }
+    public void eliminarPerro(String name){
+        Perro p = implPerro.BuscarPerroNombre(name);
+        if (p != null) {
+            implPerro.eliminarPerro(p);
+            actualizarCards();
+        }else{
+            JOptionPane.showMessageDialog(this, "PERRO NO ENCONTRADO");
+        }
+        
+    }
     
-    public void ActualizarCards(){
+    public void editarPerro(String name){
+        System.out.println("hola");
+        Perro p = implPerro.BuscarPerroNombre(name);
+        
+        JSpinner txtEdad, txtPuntos;
+        JDialog jDialog = new JDialog(this,true);
+        jDialog.setTitle("Editar Perro");
+        jDialog.setLayout(new GridLayout(7, 2));
+        jDialog.add(new JLabel("Nombre :"));
+        JTextField txtNombre = new JTextField(p.getName());
+        jDialog.add(txtNombre);
+        jDialog.add(new JLabel("Raza :"));
+        JTextField txtRaza = new JTextField(p.getRaza());
+        jDialog.add(txtRaza);
+        jDialog.add(new JLabel("Edad :"));
+        txtEdad = new JSpinner(new SpinnerNumberModel(1, 0, 30, 1));
+        txtEdad.setValue(p.getEdad());
+        jDialog.add(txtEdad);
+        jDialog.add(new JLabel("Puntos :"));
+        txtPuntos = new JSpinner(new SpinnerNumberModel(1, 0, 30, 1));
+        txtPuntos.setValue(p.getPuntos());
+        jDialog.add(txtPuntos);
+        jDialog.add(new JLabel("Imagen :"));
+        jDialog.add(new JLabel(""));
+        JTextField txtImg = new JTextField(p.getImagen());
+        jDialog.add(txtImg);
+        JButton btnEditarImg=new JButton("Editar");
+        btnEditarImg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser=new JFileChooser();
+                int n = fileChooser.showOpenDialog(panel);
+                if (n==JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                String ruta=file.getAbsolutePath();
+                int index= ruta.indexOf("data");
+                
+                txtImg.setText("./"+ruta.substring(index));
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Ningun archivo seleccionado");
+                }
+                
+            }
+        });
+        jDialog.add(btnEditarImg);
+        JButton btnAceptar = new JButton("Aceptar");
+        btnAceptar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = txtNombre.getText();
+                String Raza = txtRaza.getText();
+                int Edad = (int) txtEdad.getValue();
+                int Puntos = (int) txtPuntos.getValue();
+                String imgFile = txtImg.getText();
+                int index = p.getIndex();
+                Perro nuevoP=new Perro(name,Raza,imgFile,Puntos,Edad,index);
+                implPerro.editarPerro(p.getName(),nuevoP);
+                actualizarCards();
+                jDialog.dispose();
+            }
+        });
+        jDialog.add(btnAceptar);
+        
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jDialog.dispose();
+            }
+        });
+        jDialog.add(btnCancelar);
+        jDialog.pack();
+        jDialog.setLocationRelativeTo(this);
+        jDialog.setVisible(true);
+    }
+    
+    public void actualizarCards(){
         Perro perro=new Perro();
         perro = implPerro.mayorPuntaje();
         
-        cardGanador.Actualizar("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
+        cardGanador.actualizar("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
         
         perro = implPerro.menorPuntaje();
-        cardMenorPuntaje.Actualizar("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
+        cardMenorPuntaje.actualizar("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
         
         
         perro = implPerro.perroViejo();
-        cardPerroViejo.Actualizar("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
+        cardPerroViejo.actualizar("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
        
         
         
-        cardInformativas.Actualizar("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
+        cardInformativas.actualizar("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
 
     }
     
@@ -197,21 +292,21 @@ public class InterfazPrincipal extends JFrame{
         
         cardGanador =new Cards("GANADOR",""+perro.getName() , ""+perro.getPuntos()+" pts - "+perro.getRaza());
         
-        panelInformativo.AgregarCard(cardGanador);
+        panelInformativo.agregarCard(cardGanador);
         
        
         
         perro = implPerro.menorPuntaje();
         cardMenorPuntaje =new Cards("PUNTAJE MENOR ",""+perro.getName().toUpperCase() , ""+perro.getPuntos()+" PTS - "+perro.getRaza().toUpperCase());
-        panelInformativo.AgregarCard(cardMenorPuntaje);
+        panelInformativo.agregarCard(cardMenorPuntaje);
         
         perro = implPerro.perroViejo();
         cardPerroViejo =new Cards("PERRO MAYOR ",""+perro.getName().toUpperCase() , ""+perro.getEdad()+" AÑOS - "+perro.getRaza().toUpperCase());
-        panelInformativo.AgregarCard(cardPerroViejo);
+        panelInformativo.agregarCard(cardPerroViejo);
         
         
         cardInformativas =new Cards("CANTIDAD DE PERROS ",""+String.valueOf(getCantidadPerros()) , " PERROS EN COMPETENCIA ");
-        panelInformativo.AgregarCard(cardInformativas);
+        panelInformativo.agregarCard(cardInformativas);
          
         
     }
@@ -235,7 +330,7 @@ public class InterfazPrincipal extends JFrame{
         i.setVisible(true);
     }
 
-    void agregarPerro(Perro p) {
+    public void agregarPerro(Perro p) {
         
         implPerro.insertarPerro(p);
         setCantidadPerros(implPerro.getPerros().size());
@@ -243,7 +338,7 @@ public class InterfazPrincipal extends JFrame{
         
     }
 
-    void mostrarDatosPerro(String name) {
+    public void mostrarDatosPerro(String name) {
         Perro p;
         p = implPerro.BuscarPerroNombre(name);
         panelDatos.cargarDatos(p);

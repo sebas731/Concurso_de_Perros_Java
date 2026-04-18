@@ -6,8 +6,9 @@ package com.aplication.concursoCanino.interfaces;
 
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.*;
+
 
 /**
  *
@@ -17,18 +18,17 @@ public class PanelCardsInformativas extends JPanel {
     
     private JLabel lblGanador,lblMayor,lblMenor,lbl;
     
-    private GridLayout gb;
     
     public PanelCardsInformativas(InterfazPrincipal principal) {
         
-        gb=new GridLayout(1, 4);
+        GridLayout gb=new GridLayout(1, 4);
         gb.setVgap(4);
         gb.setHgap(4);
         setLayout(gb);
          
     }
     
-    public void AgregarCard(Cards cartaInfo){
+    public void agregarCard(Cards cartaInfo){
         if (this.getComponentCount()>=4) {
             JOptionPane.showMessageDialog(this, "No se puede Agregar");
         }else{

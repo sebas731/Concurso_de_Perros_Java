@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -198,6 +199,7 @@ public class PanelFormulario extends JPanel implements ActionListener{
         
         txtPuntos.setValue(1);
     }
+    
 
     public void crearFocusListener() {
 
@@ -225,6 +227,8 @@ public class PanelFormulario extends JPanel implements ActionListener{
         };
 
     }
+    
+    
     
 
     @Override
@@ -263,13 +267,14 @@ public class PanelFormulario extends JPanel implements ActionListener{
             int edad= (int) txtEdad.getValue();
             int puntos= (int) txtPuntos.getValue();
             String img=txtFile.getText();
+            int index = interfazMain.getCantidadPerros()+1;
             
             
             
-            Perro p=new Perro(nombre,raza,img,puntos , edad);
+            Perro p=new Perro(nombre,raza,img,puntos , edad,index);
             interfazMain.agregarPerro(p);
             limpiar();
-            interfazMain.ActualizarCards();
+            interfazMain.actualizarCards();
             
             
         }else if (e.getActionCommand().equals(LIMPIAR_FORMULARIO)) {

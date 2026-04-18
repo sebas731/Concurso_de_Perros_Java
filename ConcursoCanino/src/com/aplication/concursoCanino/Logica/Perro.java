@@ -4,7 +4,7 @@
  */
 package com.aplication.concursoCanino.Logica;
 
-import java.util.Comparator;
+
 
 /**
  *
@@ -31,13 +31,16 @@ public class Perro  {
     private int puntos;
     
     private int edad;
+    
+    private int index;
 
-    public Perro(String name, String raza, String imagen, int puntos, int edad) {
+    public Perro(String name, String raza, String imagen, int puntos, int edad,int index) {
         this.name = name;
         this.raza = raza;
         this.imagen = imagen;
         this.puntos = puntos;
         this.edad = edad;
+        this.index = index;
     }
 
     
@@ -86,6 +89,14 @@ public class Perro  {
 
     public void setPuntos(int puntos) {
         this.puntos = puntos;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
     
     

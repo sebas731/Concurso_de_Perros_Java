@@ -43,8 +43,11 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
     JTable listaTabla;
     DefaultTableModel m;
     InterfazPrincipal interfazP;
-    
-    //Botones valor
+    //CONSTANTES
+    private static final String EDITAR_PERRO = "Editar"; 
+    private static final String ELIMINAR_PERRO = "Eliminar";
+    private static final String BUSCAR_PERRO = "Buscar";
+//Botones valor
     
    
     
@@ -59,76 +62,73 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
     
     private JButton btnEditar;
     
+    private int indexTable;
+    
     public PanelTablaPerros(InterfazPrincipal interfaz) {
         
         
         interfazP = interfaz;
-        GridBagLayout gPrincipal=new GridBagLayout();
+        GridBagLayout gPrincipal = new GridBagLayout();
         
         this.setLayout(gPrincipal);
         setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
                 BorderFactory.createEmptyBorder(10, 14, 10, 14)
         ));
-        setPreferredSize(new Dimension(300,300));
-        GridBagLayout gb=new GridBagLayout();
-        JPanel panelTable=new JPanel();
+        setPreferredSize(new Dimension(300, 300));
+        GridBagLayout gb = new GridBagLayout();
+        JPanel panelTable = new JPanel();
         panelTable.setLayout(gb);
         GridBagConstraints gbs = new GridBagConstraints();
         gbs.insets = new Insets(5, 5, 5, 5);
-        
+
         //TITULO
-        gbs.gridx=0;
-        gbs.gridy=0;
-        gbs.weightx=1.0;
+        gbs.gridx = 0;
+        gbs.gridy = 0;
+        gbs.weightx = 1.0;
         //gbs.weighty=1.0;
         gbs.fill = GridBagConstraints.CENTER;
-        JLabel lblTittle= new JLabel("lista de perros");
-        add(lblTittle,gbs);
-        
+        JLabel lblTittle = new JLabel("lista de perros");
+        add(lblTittle, gbs);
+
         //Buscador
-        gbs.gridx=1;
-        gbs.gridy=0;
-        gbs.weightx=2.0;
+        gbs.gridx = 1;
+        gbs.gridy = 0;
+        gbs.weightx = 2.0;
         gbs.fill = GridBagConstraints.BOTH;
         txtBuscar = new JTextField("");
-        add(txtBuscar,gbs);
+        add(txtBuscar, gbs);
 
         //PANEL CABECERA
-        
-        JPanel panelCabecera=new JPanel();
+        JPanel panelCabecera = new JPanel();
         panelCabecera.setLayout(new GridLayout(1, 3));
-        
-        
+
         //BUSCAR PERRO
-        
-        JButton btnBuscar=new JButton("Buscar");
+        JButton btnBuscar = new JButton("Buscar");
         btnBuscar.setPreferredSize(new Dimension(80, 30));
         btnBuscar.addActionListener(this);
+        btnBuscar.setActionCommand(BUSCAR_PERRO);
         
-        gbs.gridx=2;
-        gbs.gridy=0;
-        gbs.weightx=0;
+        gbs.gridx = 2;
+        gbs.gridy = 0;
+        gbs.weightx = 0;
         gbs.fill = GridBagConstraints.NONE;
-        add(btnBuscar,gbs);
+        add(btnBuscar, gbs);
         //gbs.gridwidth=2;
         //gbs.gridheight=4;
         
+        gbs.gridx = 0;
+        gbs.gridy = 1;
+        gbs.gridwidth = 3;
         
-        
-        gbs.gridx=0;
-        gbs.gridy=1;
-        gbs.gridwidth=3;
-        
-        gbs.weightx=1.0;
-        gbs.weighty = 6.0;  
+        gbs.weightx = 1.0;
+        gbs.weighty = 6.0;        
         gbs.fill = GridBagConstraints.BOTH;
-        JPanel panelT=new JPanel(new BorderLayout());
+        JPanel panelT = new JPanel(new BorderLayout());
         
-        
-        String array[]= {"Nombre","Edad","Raza","Puntos"};
-        m=new DefaultTableModel(array,0);
-        
+        String array[] = {"Nombre", "Edad", "Raza", "Puntos"};
+        m = new DefaultTableModel(array, 0);
+
         //m.setValueAt(array, 2, 2);
         listaTabla = new JTable(m);
         listaTabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -136,13 +136,14 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) { // evita que se dispare dos veces
                     int fila = listaTabla.getSelectedRow();
+                    setIndexTable(fila);
                     if (fila != -1) {
                         String name;
-                        name = String.valueOf(listaTabla.getValueAt(fila, 0));
+                        name = getNombreTablaPerro(fila, 0);
                         interfazP.mostrarDatosPerro(name);
-        }
-    }
-            
+                    }
+                }
+                
             }
         });
         
@@ -151,40 +152,50 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
         //scrollPane.setPreferredSize(new Dimension(this.getPreferredSize().width -30,this.getPreferredSize().height -40 ));
         //scrollPane.setPreferredSize(new Dimension(250, 250));
         
-        panelT.add(scrollPane,BorderLayout.CENTER);
-        add(panelT,gbs);
-        System.out.println(""+panelT.getPreferredSize());
+        panelT.add(scrollPane, BorderLayout.CENTER);
+        add(panelT, gbs);
+        System.out.println("" + panelT.getPreferredSize());
         
-        gbs.gridx=0;
-        gbs.gridy=2;
-        gbs.gridwidth=1;
-        gbs.weightx=1.0;
-        gbs.weighty = 0.05;  
+        gbs.gridx = 0;
+        gbs.gridy = 2;
+        gbs.gridwidth = 1;
+        gbs.weightx = 1.0;
+        gbs.weighty = 0.05;        
         gbs.fill = GridBagConstraints.NONE;
         btnEditar = new JButton("Editar");
-        add(btnEditar,gbs);
+        btnEditar.addActionListener(this);
+        btnEditar.setActionCommand(EDITAR_PERRO);
+        add(btnEditar, gbs);
         
+        gbs.gridx = 1;
+        gbs.gridy = 2;
+        gbs.gridwidth = 1;
+        gbs.weightx = 1.0;
         
-        gbs.gridx=1;
-        gbs.gridy=2;
-        gbs.gridwidth=1;
-        gbs.weightx=1.0;
-          
         gbs.fill = GridBagConstraints.CENTER;
         btnEliminar = new JButton("Eliminar");
-       add(btnEliminar,gbs);
+        btnEliminar.setActionCommand(ELIMINAR_PERRO);
+        btnEliminar.addActionListener(this);
+        add(btnEliminar, gbs);
         
-        
-        System.out.println(""+this.getPreferredSize().width);
+        System.out.println("" + this.getPreferredSize().width);
         actualizarTabla();
         
         
         
     }
     
-    public int getIndexTable(){
+    private String getNombreTablaPerro(int fila, int columna){
+        return String.valueOf(listaTabla.getValueAt(fila, columna));
+    }
+    
+    public void setIndexTable(int index){
+        indexTable =index;
         
-        return listaTabla.getSelectedRow();
+    }
+    
+    public int getIndexTable(){
+        return indexTable;
     }
     
      public void mostrarPerro(Perro p) {
@@ -244,8 +255,21 @@ public class PanelTablaPerros extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        
+        if (e.getActionCommand().equals("Editar")) {
+            
+            String nombre=getNombreTablaPerro(getIndexTable(), 0);
+            interfazP.editarPerro(nombre);
+            actualizarTabla();
+        }else if (e.getActionCommand().equals("Eliminar")) {
+            String nombre=getNombreTablaPerro(getIndexTable(), 0);
+            interfazP.eliminarPerro(nombre);
+            actualizarTabla();
+        }else if (e.getActionCommand().equals("Buscar")) {
+            interfazP.buscarPerro(txtBuscar.getText());
+        }
        
-        interfazP.buscarPerro(txtBuscar.getText());
+        
         
     }
     

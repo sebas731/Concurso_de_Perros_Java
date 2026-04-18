@@ -46,22 +46,22 @@ public class PanelBotonesOrdenamientos extends JPanel implements ActionListener{
         btnOrdenarEdad = new JButton(" EDAD ");
         btnOrdenarEdad.setActionCommand(ORDENAR_POR_EDAD);
         btnOrdenarEdad.addActionListener(this);
-        add(btnOrdenarEdad, 0);
+        add(btnOrdenarEdad);
         
         btnOrdenarRaza = new JButton(" RAZA ");
         btnOrdenarRaza.setActionCommand(ORDENAR_POR_RAZA);
         btnOrdenarRaza.addActionListener(this);
-        add(btnOrdenarRaza, 1);
+        add(btnOrdenarRaza);
         
         btnOrdenarNombre = new JButton(" NOMBRE ");
         btnOrdenarNombre.setActionCommand(ORDENAR_POR_NOMBRE);
         btnOrdenarNombre.addActionListener(this);
-        add(btnOrdenarNombre, 2);
+        add(btnOrdenarNombre);
         
         btnOrdenarPuntos = new JButton(" PUNTOS ");
         btnOrdenarPuntos.setActionCommand(ORDENAR_POR_PUNTOS);
         btnOrdenarPuntos.addActionListener(this);
-        add(btnOrdenarPuntos, 3);
+        add(btnOrdenarPuntos);
         
        
         
